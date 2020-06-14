@@ -124,21 +124,21 @@ import * as keycode from 'keycode-js'
 
 
 type KeyPressEventMap = { [K in Keys]: () => Cypress.Chainable }
-const keyPressFactory = (eventName: string) => (Object.entries(keycode) as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
+const keyPressFactory = (eventName: string) => (elId: string = 'body') => (Object.entries(keycode) as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
     ...acc,
-    [key]: () => cy.get('body').trigger(eventName, { keyCode })
+    [key]: () => cy.get(elId).trigger(eventName, { keyCode })
 }), {} as KeyPressEventMap);
 
 export const keyholdCommands: KeyPressEventMap = (Object.entries(keycode) as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
     ...acc,
     [key]: (waitDuration: number) => {
-        cy.get('body').trigger('keydown', { keyCode });
+        cy.get('body').trigger('keydown', { keyCode, release: false });
         cy.wait(waitDuration)
         cy.get('body').trigger('keyup', { keyCode, release: false });
     }
 }), {} as KeyPressEventMap);
 
 
-export const keydownCommands: KeyPressEventMap = keyPressFactory('keydown');
-export const keypressCommands: KeyPressEventMap = keyPressFactory('keypress');
-export const keyupCommands: KeyPressEventMap = keyPressFactory('keyup');
+export const keydownCommands: (elId: string) => KeyPressEventMap = keyPressFactory('keydown');
+export const keypressCommands: (elId: string) => KeyPressEventMap = keyPressFactory('keypress');
+export const keyupCommands: (elId: string) => KeyPressEventMap = keyPressFactory('keyup');
