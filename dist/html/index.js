@@ -21,3 +21,4 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InputCommands = __importStar(require("./input"));
 exports.Utility = __importStar(require("./util"));
+exports.SelectCommands = __importStar(require("./select"));

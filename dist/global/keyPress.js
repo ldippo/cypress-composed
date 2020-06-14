@@ -32,16 +32,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.keyupCommands = exports.keypressCommands = exports.keydownCommands = exports.keyholdCommands = void 0;
 var keycode = __importStar(require("keycode-js"));
-var keyPressFactory = function (eventName) { return Object.entries(keycode).reduce(function (acc, _a) {
-    var _b;
-    var key = _a[0], keyCode = _a[1];
-    return (__assign(__assign({}, acc), (_b = {}, _b[key] = function () { return cy.get('body').trigger(eventName, { keyCode: keyCode }); }, _b)));
-}, {}); };
+var keyPressFactory = function (eventName) { return function (elId) {
+    if (elId === void 0) { elId = 'body'; }
+    return Object.entries(keycode).reduce(function (acc, _a) {
+        var _b;
+        var key = _a[0], keyCode = _a[1];
+        return (__assign(__assign({}, acc), (_b = {}, _b[key] = function () { return cy.get(elId).trigger(eventName, { keyCode: keyCode }); }, _b)));
+    }, {});
+}; };
 exports.keyholdCommands = Object.entries(keycode).reduce(function (acc, _a) {
     var _b;
     var key = _a[0], keyCode = _a[1];
     return (__assign(__assign({}, acc), (_b = {}, _b[key] = function (waitDuration) {
-        cy.get('body').trigger('keydown', { keyCode: keyCode });
+        cy.get('body').trigger('keydown', { keyCode: keyCode, release: false });
         cy.wait(waitDuration);
         cy.get('body').trigger('keyup', { keyCode: keyCode, release: false });
     }, _b)));
