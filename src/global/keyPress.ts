@@ -4,12 +4,12 @@ import * as keycode from 'keycode-js'
 import { Keys } from './keycodes'
 
 type KeyPressEventMap = { [K in Keys]: () => Cypress.Chainable }
-const keyPressFactory = (eventName: string) => (Object(keycode).entries() as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
+const keyPressFactory = (eventName: string) => (Object.entries(keycode) as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
     ...acc,
     [key]: () => cy.get('body').trigger(eventName, { keyCode })
 }), {} as KeyPressEventMap);
 
-export const keyholdCommands = (Object(keycode).entries() as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
+export const keyholdCommands = (Object.entries(keycode) as [keyof Keys, string][]).reduce((acc, [key, keyCode]) => ({
     ...acc,
     [key]: (waitDuration: number) => {
         cy.get('body').trigger('keydown', { keyCode });
